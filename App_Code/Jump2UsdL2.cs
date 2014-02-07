@@ -126,7 +126,7 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
         if (!(validatePresenceNotEmpty("activityValue", activityValue))) return this.usdObject;
         if (!(validatePresenceNotEmpty("operatorName", operatorName))) return this.usdObject;
 
-        string comment = "Le champ Jump! '" + activityType + "' a été mis à jour par '" + operatorName + "' : '" + activityValue +"'.";
+        string comment = "JUMP - [" + activityType.ToUpper() + "] " + activityValue + " - Maj par " + operatorName ;
         
         // login
         this.mySID = login(username, password);
@@ -151,10 +151,27 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
         }
         this.myWsTools.log("INFO", this.methodName + " - " + this.mySID + " - myHandle : " + myHandle);
 
+        // Convert activityDate
+        //int secondsSinceEpoch = stringToEpoch(activityDate);
+        //if (secondsSinceEpoch == 0)
+        //{
+            //setReturn("invalid format : activityDate", "11", "", false);
+            //return this.usdObject;
+        //}
+        // Set zjump_majdt
+        try
+        {
+            myResult = this.myUsdService.updateObject(this.mySID, myHandle, new string[] { "zjump_majdt", nowEpoch().ToString() }, new string[0]);
+        }
+        catch (Exception e)
+        {
+            this.myWsTools.log("INFO", this.methodName + " - " + this.mySID + " - Can't update zjump_majdt : " + e.Message);
+        }
+
         //Log Comment
         try
         {
-            this.myUsdService.logComment(this.mySID, myHandle, comment, 1);
+            this.myUsdService.logComment(this.mySID, myHandle, comment, 0);
             setReturn("Log Comment", "0", "", true);
         }
         catch (Exception e)
@@ -199,11 +216,11 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
 
         if (description == "")
         {
-            description = "Le status Jump! a été mis à jour par '" + operatorName + "' : '" + status + "'.";
+            description = "JUMP - [STATUT] " + status + " - Maj par " + operatorName;
         }
         else
         {
-            description = "Le status Jump! a été mis à jour par '" + operatorName + "' : '" + status + "'.\n" + description;
+            description = "JUMP - [STATUT] " + status + " - Maj par " + operatorName + "'\n" + description;
         }
         // login
         this.mySID = login(username, password);
@@ -240,6 +257,23 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
             return this.usdObject;
         }
         this.myWsTools.log("INFO", this.methodName + " - " + this.mySID + " - ticket handle : " + myHandle);
+
+        // Convert activityDate
+        //int secondsSinceEpoch = stringToEpoch(activityDate);
+        //if (secondsSinceEpoch == 0)
+        //{
+            //setReturn("invalid format : activityDate", "11", "", false);
+            //return this.usdObject;
+        //}
+        // Set zjump_majdt
+        try
+        {
+            myResult = this.myUsdService.updateObject(this.mySID, myHandle, new string[] { "zjump_majdt", nowEpoch().ToString() }, new string[0]);
+        }
+        catch (Exception e)
+        {
+            this.myWsTools.log("INFO", this.methodName + " - " + this.mySID + " - Can't update zjump_majdt : " + e.Message);
+        }
 
         // Get Status Handle
         try
@@ -327,8 +361,25 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
         }
         this.myWsTools.log("INFO", this.methodName + " - " + this.mySID + " - ticket handle : " + myHandle);
 
+        // Convert activityDate
+        //int secondsSinceEpoch = stringToEpoch(activityDate);
+        //if (secondsSinceEpoch == 0)
+        //{
+            //setReturn("invalid format : activityDate", "11", "", false);
+            //return this.usdObject;
+        //}
+        // Set zjump_majdt
+        try
+        {
+            myResult = this.myUsdService.updateObject(this.mySID, myHandle, new string[] { "zjump_majdt", nowEpoch().ToString() }, new string[0]);
+        }
+        catch (Exception e)
+        {
+            this.myWsTools.log("INFO", this.methodName + " - " + this.mySID + " - Can't update zjump_majdt : " + e.Message);
+        }
+
         //Add activity
-        solution = "La solution Jump! a été mise à jour par '" + operatorName + ".\n" + solution;
+        solution = "JUMP - [SOLUTION] - Maj par " + operatorName + "\n" + solution;
         try
         {
             this.myUsdService.createActivityLog(this.mySID, myCreatorHandle, myHandle, solution, "SOLN", 0, false);
@@ -366,7 +417,7 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
 
         TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
         int secondsSinceEpoch;
-        String format = "dd/MM/yy hh:mm:ss";
+        String format = "dd/MM/yy HH:mm:ss";
         CultureInfo provider = CultureInfo.InvariantCulture;
         DateTime incidentSartDate;
         try
@@ -411,7 +462,7 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
         //Update Object
         try
         {
-            myResult = this.myUsdService.updateObject(this.mySID, myHandle, new string[] { "zdate_debut", secondsSinceEpoch.ToString() }, new string[0]);
+            myResult = this.myUsdService.updateObject(this.mySID, myHandle, new string[] { "zdate_debut", secondsSinceEpoch.ToString(), "zjump_majdt", nowEpoch().ToString() }, new string[0]);
             setReturn("IncidentStart updated", "0", incidentSartDate.ToString(), true);
         }
         catch (Exception e)
@@ -446,7 +497,7 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
 
         TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
         int secondsSinceEpoch;
-        String format = "dd/MM/yy hh:mm:ss";
+        String format = "dd/MM/yy HH:mm:ss";
         CultureInfo provider = CultureInfo.InvariantCulture;
         DateTime incidentEndDate;
         try
@@ -490,7 +541,7 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
         //Update Object
         try
         {
-            myResult = this.myUsdService.updateObject(this.mySID, myHandle, new string[] { "zdate_fin", secondsSinceEpoch.ToString() }, new string[0]);
+            myResult = this.myUsdService.updateObject(this.mySID, myHandle, new string[] { "zdate_fin", secondsSinceEpoch.ToString(), "zjump_majdt", nowEpoch().ToString() }, new string[0]);
             setReturn("IncidentEnd updated", "0", incidentEndDate.ToString(), true);
         }
         catch (Exception e)
@@ -508,6 +559,46 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
         return this.usdObject;
     }
 
+    public int nowEpoch ()
+    {
+        // Version originale avec des dates locales
+        //DateTime saveNow = DateTime.Now;
+        //saveNow = DateTime.SpecifyKind(saveNow, DateTimeKind.Local);
+        //DateTime myepoch = DateTime.SpecifyKind(Epoch, DateTimeKind.Local);
+        //TimeSpan elapsedTime = saveNow - myepoch;
+
+        // Finalement j'utilise la date UTC pour corriger le problème de h+1
+        TimeSpan elapsedTime = DateTime.UtcNow - new DateTime(1970, 1, 1);
+        return (int)elapsedTime.TotalSeconds;
+    }
+
+    public int stringToEpoch(string activityDate)
+    {
+        // activityDate verification
+        TimeSpan t = DateTime.UtcNow - new DateTime(1970, 1, 1);
+        int secondsSinceEpoch;
+        String format = "dd/MM/yy HH:mm:ss";
+        CultureInfo provider = CultureInfo.InvariantCulture;
+        DateTime jumpDate;
+        try
+        {
+            //String incidentEnd To DateTime
+            jumpDate = DateTime.ParseExact(activityDate, format, provider);
+            //Specify incidentEndDate is a local DateTime
+            jumpDate = DateTime.SpecifyKind(jumpDate, DateTimeKind.Local);
+            //Convert it to utc Date
+            jumpDate = jumpDate.ToUniversalTime();
+            //Transform into timestamp
+            t = jumpDate - new DateTime(1970, 1, 1);
+            secondsSinceEpoch = (int)t.TotalSeconds;
+        }
+        catch (Exception e)
+        {
+            return 0;
+        }
+        return secondsSinceEpoch;
+    }
+
     [WebMethod]
     public UsdObject changeGroup(string username, string password, string ref_num, string group, string activityDate, string operatorName)
     {
@@ -522,7 +613,8 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
         if (!(validatePresenceNotEmpty("group", group))) return this.usdObject;
         if (!(validatePresenceNotEmpty("operatorName", operatorName))) return this.usdObject;
 
-        string comment = "Le groupe Jump! a été mis à jour par '" + operatorName + "' : '" + group + "'.";
+        string comment = "JUMP - [GROUPE] " + group + " - Maj par " + operatorName;
+
         // login
         this.mySID = login(username, password);
         if (this.mySID == 0)
@@ -546,10 +638,27 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
         }
         this.myWsTools.log("INFO", this.methodName + " - " + this.mySID + " - myHandle : " + myHandle);
 
+        // Convert activityDate
+        //int secondsSinceEpoch = stringToEpoch(activityDate);
+        //if (secondsSinceEpoch == 0)
+        //{
+            //setReturn("invalid format : activityDate", "11", "", false);
+            //return this.usdObject;
+        //}
+        // Set zjump_majdt and zjump_grp
+        try
+        {
+            myResult = this.myUsdService.updateObject(this.mySID, myHandle, new string[] { "zjump_majdt", nowEpoch().ToString(), "zjump_grp", group }, new string[0]);
+        }
+        catch (Exception e)
+        {
+            this.myWsTools.log("INFO", this.methodName + " - " + this.mySID + " - Can't update zjump_majdt : " + e.Message);
+        }
+
         //Log Comment
         try
         {
-            this.myUsdService.logComment(this.mySID, myHandle, comment, 1);
+            this.myUsdService.logComment(this.mySID, myHandle, comment, 0);
             setReturn("Change group", "0", "", true);
         }
         catch (Exception e)
