@@ -14,7 +14,7 @@ using USD_WS;
 /// </summary>
 [WebService(Namespace = "http://localhost/jump_ws/")]
 [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-// To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
+// To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line.
 // [System.Web.Script.Services.ScriptService]
 public class Jump2UsdL2 : System.Web.Services.WebService {
     private USD_WebService myUsdService;
@@ -128,7 +128,7 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
         if (!(validatePresenceNotEmpty("operatorName", operatorName))) return this.usdObject;
 
         string comment = "JUMP - [" + activityType.ToUpper() + "] " + activityValue + " - Maj par " + operatorName ;
-        
+
         // login
         this.mySID = login(username, password);
         if (this.mySID == 0)
@@ -202,7 +202,7 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
         status_matching["Solved"] = "SLT";
         status_matching["Restored"] = "RESU";
         status_matching["Closed"] = "CL";
-        
+
         string myResult;
 
         this.myWsTools.log("INFO", this.methodName + " - " + this.mySID + " - username : " + username + " - password : " + password + " - ref_num : " + ref_num + " - status : " + status + " - description : " + description + " - activityDate : " + activityDate + " - operatorName : " + operatorName);
@@ -294,12 +294,12 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
         //Change Status
         try
         {
-            //The webmethod changeStatus (USD) seems to not working with \n on description 
+            //The webmethod changeStatus (USD) seems to not working with \n on description
             // So Replace \n char on description
             string pattern = "\\n+";
-            string new_desc = " ";
+            string replace = " ";
             Regex rgx = new Regex(pattern);
-            string result = rgx.Replace(description, new_desc);
+            string new_desc = rgx.Replace(description, replace);
             this.myUsdService.changeStatus(this.mySID, myCreatorHandle, myHandle, new_desc, newStatusHandle);
             setReturn("Change Status", "0", "", true);
         }
@@ -691,7 +691,7 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
         this.myWsTools.log("INFO", this.methodName + " - username : " + username + " - password : " + password + " - ref_num : " + ref_num + " - filename : " + filename + " - description : " + description + " - operatorName : " + operatorName);
         this.myWsTools.log("INFO", this.methodName + " - buffer length : " + buffer.Length);
         //this.myWsTools.log("INFO", this.methodName + " - buffer : " + System.Text.Encoding.UTF8.GetString(buffer));
-        
+
         // Validate parameters
         if (!(validatePresenceNotEmpty("username", username))) return this.usdObject;
         if (!(validatePresence("password", password))) return this.usdObject;
@@ -709,8 +709,8 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
         string physicalFilename = secondsSinceEpoch.ToString() + "_" + filename;
         try
         {
-            // setting the file location to be saved in the server. 
-            // reading from the web.config file 
+            // setting the file location to be saved in the server.
+            // reading from the web.config file
             this.myWsTools.log("INFO", this.methodName + " - " + upload_path);
             string FilePath =
                 //Path.Combine(ConfigurationManager.AppSettings["upload_path"], FileName);
@@ -718,8 +718,8 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
             Path.Combine(upload_path, physicalFilename);
 
             File.Create(FilePath).Close();
-            // open a file stream and write the buffer. 
-            // Don't open with FileMode.Append because the transfer may wish to 
+            // open a file stream and write the buffer.
+            // Don't open with FileMode.Append because the transfer may wish to
             // start a different point
             using (FileStream fs = new FileStream(FilePath, FileMode.Open,
             FileAccess.ReadWrite, FileShare.Read))
@@ -781,9 +781,9 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
             "0",
             "file_name",
             physicalFilename,
-            //"rel_file_path", 
+            //"rel_file_path",
             //"rep_folder_00001",
-            "repository", 
+            "repository",
             repositoryHandle,
             "status",
             "INSTALLED"
