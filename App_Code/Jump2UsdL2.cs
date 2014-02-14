@@ -5,7 +5,8 @@ using System.Web;
 using System.Web.Services;
 using System.Xml;
 using System.Globalization;
-using System.IO; 
+using System.IO;
+using System.Text.RegularExpressions;
 using USD_WS;
 
 /// <summary>
@@ -293,7 +294,13 @@ public class Jump2UsdL2 : System.Web.Services.WebService {
         //Change Status
         try
         {
-            this.myUsdService.changeStatus(this.mySID, myCreatorHandle, myHandle, description, newStatusHandle);
+            //The webmethod changeStatus (USD) seems to not working with \n on description 
+            // So Replace \n char on description
+            string pattern = "\\n+";
+            string new_desc = " ";
+            Regex rgx = new Regex(pattern);
+            string result = rgx.Replace(description, new_desc);
+            this.myUsdService.changeStatus(this.mySID, myCreatorHandle, myHandle, new_desc, newStatusHandle);
             setReturn("Change Status", "0", "", true);
         }
         catch (Exception e)
